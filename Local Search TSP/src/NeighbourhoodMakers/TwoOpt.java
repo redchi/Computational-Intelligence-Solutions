@@ -11,78 +11,61 @@ import Main.*;
 public class TwoOpt {
 
 	public ArrayList<Route> generateNeighbours(Route mainRoute){
-		ArrayList<CityLink> cityLinks = generateCityLinks(mainRoute);
+		ArrayList<Route> neighbours = new ArrayList<Route>();
+		ArrayList<Location> mainPath = mainRoute.getPath();
+		int mainRouteSize = mainPath.size()-2;
+		ArrayList<Integer> routeIndexs = numCounter(0,mainRouteSize);
 		
-		for(int cityLIndex = 0 ;cityLIndex<cityLinks.size();cityLIndex ++ ) {
-			CityLink currentCityLink = cityLinks.get(cityLIndex);
-		//	ArrayList<CityLink> newCityLinks = new ArrayList<CityLink>(cityLinks); // for new solution
-			//newCityLinks.remove(cityLIndex);
-			int linksSize = cityLinks.size();
-			// possiblelinkswaps = all the other citylinks (indexes) that can be swapped with selected link
-			List<Integer> possibleLinkSwaps = Stream.iterate(0, n -> n + 1)
-	                .limit(linksSize-1)
-	                .collect(Collectors.toList());
-			int fwdLinkIndex = (cityLIndex+1)%linksSize;
-			int dwnLinkIndex = (cityLIndex-1)%linksSize;
-			possibleLinkSwaps.removeAll(Arrays.asList(fwdLinkIndex,dwnLinkIndex));
-			
-			// othercityLink = the link which will be swapped with current selected link
-			for(int otherCityLinkIndex: possibleLinkSwaps) {
-				CityLink otherCityLink = cityLinks.get(otherCityLinkIndex);
+		routeIndexs.add(0); // returning to start city
+		int cLinksTotal = routeIndexs.size() -2;
+		for(int cLink = 0; cLink<=cLinksTotal;cLink++) {
+			int fwdCLink = (cLink+1)%(cLinksTotal+1);
+			int dwnCLink = (cLink-1)%(cLinksTotal+1);
+			ArrayList<Integer> swappableCLinks = numCounter(0,(cLinksTotal -1));
+			swappableCLinks.removeAll(Arrays.asList(cLink,fwdCLink,dwnCLink));
+			for(int otherCLink:swappableCLinks) {
+				int FCL = cLink;
+				int SCL = otherCLink;
+				if(cLink>otherCLink) {
+					 FCL = otherCLink;
+					 SCL = cLink;
+				}
+				ArrayList<Integer> newRouteIndexes = numCounter(0,FCL);
+				newRouteIndexes.addAll(numCounter(SCL,(FCL+1)));			
+				if(SCL<cLinksTotal) {
+					newRouteIndexes.addAll(numCounter((SCL+1),cLinksTotal));
+				}
+				newRouteIndexes.add(0);
 				
-				// these will be updates, as we cannot update the original
-				CityLink currentCityLinkUpdated = currentCityLink.clone();
-				CityLink otherCityLinkUpdated = otherCityLink.clone();
-				currentCityLinkUpdated.setEndCity(otherCityLinkUpdated.getEndCity());
-				// swap
-			//	newCityLinks.remove(index)
+				Route route = new Route();
+				for(int num:newRouteIndexes ) {	
+					Location city = mainPath.get(num).clone();
+					route.addCity(city);				
+				}
+				neighbours.add(route);
 				
 			}
+			
 		}
-	}
-	
-
-	private int[] possibleCityLinkSwaps(int currentCityLinkIndex,int size) {
-	
 		
-		
-	}
-	
-	
-	private ArrayList<CityLink> generateCityLinks(Route route){
-		ArrayList<Location> cities = route.getPath();
-		ArrayList<CityLink> cityLinks = new ArrayList<TwoOpt.CityLink>();
-		for(int i = 0;i<cities.size()-1;i++) {
-			Location startCity = cities.get(i);
-			Location endCity = cities.get(i+1);
-			CityLink cl = new CityLink(startCity,endCity);
-			cityLinks.add(cl);
-		}
-		return cityLinks;
-	}
-	
-	private class CityLink{
-		private Location startCity;
-		private Location endCity;
-		public CityLink(Location startCity,Location endCity) {
-			this.startCity = startCity;
-			this.endCity = endCity;
-		}
-		public Location getStartCity() {
-			return startCity;
-		}
-		public Location getEndCity() {
-			return endCity;
-		}
-		public void setStartCity(Location loc) {
-			startCity = loc;
-		}
-		public void setEndCity(Location loc) {
-			endCity = loc;
-		}
-		public CityLink clone() {
-			return new CityLink(startCity.clone(),endCity.clone());
-		}
+		return neighbours;
 
 	}
+
+	public ArrayList<Integer> numCounter(int start,int end){
+		ArrayList<Integer> count = new ArrayList<Integer>();
+		count.add(start);
+		int inverter = 1;
+		int diff = end - start ;
+		if(diff<0) {
+			diff = diff * -1;
+			inverter = -1;
+		}
+		for(int i = 1;(i-1)<diff;i++ ) {
+			int res = start + (i*inverter);
+			count.add(res);
+		}
+		return count;
+	}
+	
 }
