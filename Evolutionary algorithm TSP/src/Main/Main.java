@@ -1,6 +1,8 @@
 package Main;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 import Evolver.Evolver;
 import PopulationMakers.RandomPopulationMaker;
@@ -10,9 +12,18 @@ public class Main {
 
 	public static void main(String[] args) {
         Main main = new Main();
-        main.start();
+        main.test();
 	}
 
+	void test() {
+		ArrayList<String> strs = new ArrayList<String>(Arrays.asList("a","b","c","d","e"));
+		Collections.rotate(strs, 1);
+		for(String s:strs) {
+			
+			System.out.println(s + "");
+		}
+		
+	}
 	
 	public void start() {
 		Map map = new Map();
@@ -34,6 +45,7 @@ public class Main {
 			double cBestRouteCost = map.getCostOfRoute(currentBestRoute);
 			if(cBestRouteCost<solutionCost) {
 				currentSolution = currentBestRoute;
+				solutionCost = cBestRouteCost;
 			}
 		}
 		
