@@ -11,8 +11,8 @@ import java.util.Random;
 
 public class Map {
 
-	private ArrayList<Location> allCities;
-	private int startCityIndex;
+	ArrayList<Location> allCities;
+	int startCityIndex;
 	public Map() {
 		allCities = new ArrayList<Location>();
 	}
@@ -64,7 +64,22 @@ public class Map {
 	         }
 	}
 	
-
+	// shouldnt be here
+	public double getCostOfRoute(Route route) {
+		double totalDistance = 0;
+		ArrayList<Location> path = route.getPath();
+		int pathSize = path.size();
+		Location currentCity = path.get(0);
+		for(int i = 1;i<pathSize;i++) {
+			Location nextCity = path.get(i);
+			double x = (nextCity.getX() - currentCity.getX());
+			double y = (nextCity.getY() - currentCity.getY());
+			double distance = Math.sqrt((x*x)+(y*y));
+			totalDistance = totalDistance + distance;
+			currentCity = path.get(i);
+		}
+		return totalDistance;
+	}
 	
 	public ArrayList<Location> getCities(){
 		return allCities;
