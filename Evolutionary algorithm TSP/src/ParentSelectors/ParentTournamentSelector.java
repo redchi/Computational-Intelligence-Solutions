@@ -1,6 +1,8 @@
 package ParentSelectors;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Random;
 
 import Main.Location;
@@ -36,6 +38,27 @@ public class ParentTournamentSelector {
 			parents.add(winner);
 		}
 		
+//		int total = 0;
+//		ArrayList<Route> copy = new ArrayList<Route>(parents);
+//		for(int i = 0;i<parents.size();i++) {
+//			int count = 0;
+//			Route parent = parents.get(i);
+//			for(Route other:copy) {
+//				if(parent.equals(other) == true) {
+//					count = count +1 ;
+//				}
+//			}
+//			if(count>=1) {
+//				System.out.println("route won - "+count + " times dist = "+parent.getCostOfRoute());
+//			}
+//			
+//			total = total + count;
+//			copy.removeAll(Collections.singleton(parent));
+//		}
+//
+//		System.out.println(" end  total = "+total);
+//		System.out.println(" parent size = "+parents.size());
+//		
 		return parents;
 	}
 	

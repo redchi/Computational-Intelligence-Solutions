@@ -17,23 +17,36 @@ public class Evolver {
 	private EGSurvivorSelector survivorSelector;
 	
 	public Evolver() {
-		parentSelector = new ParentTournamentSelector(126484);
+		parentSelector = new ParentTournamentSelector(1264841234);
 		recombinator = new Order1Crossover(234527);
-		mutator = new SwapMutator(214365, 50);
+		mutator = new SwapMutator(214365, 100);
 		survivorSelector = new EGSurvivorSelector();
 	}
 	
-	public ArrayList<Route> evolvePopulation(ArrayList<Route> currentPopulation) {
+	public ArrayList<Route> evolvePopulation(ArrayList<Route> currentPopulation,int sizeLimit) {
 		int selectionAmt = (currentPopulation.size()/2);
 		ArrayList<Route> parents = parentSelector.selectParents(currentPopulation,selectionAmt);
 		int childrenAmt = parents.size() * 2;
 		ArrayList<Route> children = recombinator.generateChildren(parents,childrenAmt);
-		
-		for(Route child: children) {
+	//	ArrayList<Route> mutatedChildren = new A
+		for(int i = 0;i<children.size();i++) {
+			Route child = children.get(i);
 			child = mutator.mutate(child);
+			children.set(i,child);
+			//Route child = 
 		}
 		
-		ArrayList<Route> survivors  =  survivorSelector.selectSurvivors(parents,children);	
+//		for(Route child: children) {
+//			
+//		//	System.out.println("New child dist = "+ child.getCostOfRoute());
+//		}
+		
+	
+		for(Route child: children) {
+			//child = mutator.mutate(child);
+	//		System.out.println(" child dist = "+ child.getCostOfRoute());
+		}
+		ArrayList<Route> survivors  =  survivorSelector.selectSurvivors(parents,children,sizeLimit);	
 		return survivors;
 	}
 }

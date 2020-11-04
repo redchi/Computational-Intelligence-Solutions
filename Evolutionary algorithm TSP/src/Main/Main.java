@@ -12,7 +12,7 @@ public class Main {
 
 	public static void main(String[] args) {
         Main main = new Main();
-        main.test();
+        main.start();
 	}
 
 	void test() {
@@ -31,16 +31,20 @@ public class Main {
 //		map.generateCities(5,0, 30, 30, 1234);
 		map.generateCitiesFromCSV(0);
 		RandomPopulationMaker populationMaker = new RandomPopulationMaker();
-		ArrayList<Route> population = populationMaker.generatePopulation(map,100,9998);	
+		
+		int populationSize = 100;
+		
+		ArrayList<Route> population = populationMaker.generatePopulation(map,populationSize,9998);	
 		Route  currentSolution = population.get(0);
 		double solutionCost = map.getCostOfRoute(currentSolution);
 		
 		Evolver evolver = new Evolver();
 		
-		int repeatAmt = 100;
+		int repeatAmt = 30;
 		
 		for(int i =0;i<repeatAmt;i++) {		
-			population = evolver.evolvePopulation(population);
+			System.out.println("Cycle "+i);
+			population = evolver.evolvePopulation(population,populationSize);
 			Route currentBestRoute = bestRoute(population);
 			double cBestRouteCost = map.getCostOfRoute(currentBestRoute);
 			if(cBestRouteCost<solutionCost) {
@@ -48,12 +52,22 @@ public class Main {
 				solutionCost = cBestRouteCost;
 			}
 		}
-		
+		System.out.println("DONE COST = " + solutionCost );
 
 	}
 	
 	private Route bestRoute(ArrayList<Route> population) {
-		return null;
+		Route bestRoute = population.get(0);
+		double bestRoutecost = bestRoute.getCostOfRoute();
+		
+		for(Route route:population) {
+			double cost = route.getCostOfRoute();
+			if(cost<bestRoutecost) {
+				bestRoute = route;
+				bestRoutecost = cost;
+			}
+		}
+		return bestRoute;
 	}
 	
 }
