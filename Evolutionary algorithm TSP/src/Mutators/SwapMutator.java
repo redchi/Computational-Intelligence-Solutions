@@ -22,10 +22,10 @@ public class SwapMutator {
 		int chance = rand.nextInt(101);
 		
 		if(chance<=mutationRate) {
-			System.out.println("mutated!");
-			System.out.println("before = " + child.getCostOfRoute());
+		//	System.out.println("mutated!");
+			//System.out.println("before = " + child.getCostOfRoute());
 			Route newChild = randomSwapCity(child);
-			System.out.println("after = " + newChild.getCostOfRoute());
+			//System.out.println("after = " + newChild.getCostOfRoute());
 			return newChild;
 		}
 		else {

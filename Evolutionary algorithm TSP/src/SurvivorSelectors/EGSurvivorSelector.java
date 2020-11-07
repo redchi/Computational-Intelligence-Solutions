@@ -36,9 +36,9 @@ public class EGSurvivorSelector {
 		 
 		 for(int i = 0;i<populationSize;i++) {
 			 newPopulation.add(children.get(i));
-			 System.out.println("survivor dist= "+children.get(i).getCostOfRoute());
+			// System.out.println("survivor dist= "+children.get(i).getCostOfRoute());
 		 }
-		System.out.println("\n");
+		//System.out.println("\n");
 		return newPopulation;
 	}
 	

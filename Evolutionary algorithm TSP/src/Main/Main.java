@@ -1,8 +1,13 @@
 package Main;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+
+import org.knowm.xchart.BitmapEncoder;
+import org.knowm.xchart.XYChart;
+import org.knowm.xchart.BitmapEncoder.BitmapFormat;
 
 import Evolver.Evolver;
 import PopulationMakers.RandomPopulationMaker;
@@ -28,8 +33,8 @@ public class Main {
 	public void start() {
 		Map map = new Map();
 		
-//		map.generateCities(5,0, 30, 30, 1234);
-		map.generateCitiesFromCSV(0);
+		map.generateCitiesRandomly(1000,0, 5000, 5000, 1234);
+//		map.generateCitiesFromCSV(0);
 		RandomPopulationMaker populationMaker = new RandomPopulationMaker();
 		
 		int populationSize = 100;
@@ -40,13 +45,16 @@ public class Main {
 		
 		Evolver evolver = new Evolver();
 		
-		int repeatAmt = 30;
-		
+		int repeatAmt = 1000;
+		System.out.println("START COST = " + solutionCost );
+
 		for(int i =0;i<repeatAmt;i++) {		
-			System.out.println("Cycle "+i);
+			//System.out.println("Cycle "+i);
 			population = evolver.evolvePopulation(population,populationSize);
 			Route currentBestRoute = bestRoute(population);
+			screenshot(currentBestRoute,i);
 			double cBestRouteCost = map.getCostOfRoute(currentBestRoute);
+			
 			if(cBestRouteCost<solutionCost) {
 				currentSolution = currentBestRoute;
 				solutionCost = cBestRouteCost;
@@ -56,6 +64,18 @@ public class Main {
 
 	}
 	
+	
+	private void screenshot(Route route,int picCount) {
+		 LineChart lineChart = new LineChart(route);
+		    XYChart chart = lineChart.getChart();
+		//    new SwingWrapper<XYChart>(chart).displayChart();
+		 try {
+			BitmapEncoder.saveBitmap(chart, "./ChartPic/"+picCount, BitmapFormat.PNG);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	private Route bestRoute(ArrayList<Route> population) {
 		Route bestRoute = population.get(0);
 		double bestRoutecost = bestRoute.getCostOfRoute();
