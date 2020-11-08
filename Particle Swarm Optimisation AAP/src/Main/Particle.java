@@ -20,7 +20,9 @@ public class Particle {
 	
 	
 	public void update() {
-		
+		checkCurrentPosition();
+		calculateNewVelocity();
+		moveToNewPosition();
 		
 	}
 	
@@ -53,24 +55,60 @@ public class Particle {
 		AxisValues [] allComp = new AxisValues[] {inertia,cognitiveComp,socialComp}; 
 		
 		AxisValues newVelocity = addAxisValues(allComp);
-		
+		this.velocity = newVelocity;
 		
 	}
 	private void moveToNewPosition() {
-		AxisValues newPosition = addAxisValues(position,velocity);
+		AxisValues newPosition = addAxisValues(new AxisValues[] {position,velocity});
 		position = newPosition;
 		
 	}
+	
 	private AxisValues addAxisValues(AxisValues[] values) {
-		return null;
+
+		int dim = values[0].getAntennaPos().size();  // dimension
+		
+		ArrayList<Double> totalAddedVal = new ArrayList<Double>();
+		for(int i = 0;i<dim;i++) {
+			totalAddedVal.set(i, (double) 0);
+		}
+		
+		
+		for(AxisValues value:values) {
+			ArrayList<Double> antennaPos = value.getAntennaPos();
+			for(int i = 0;i<antennaPos.size();i++) {
+				double pos = antennaPos.get(i);
+				double totalpos = totalAddedVal.get(i);
+				double newPos = pos + totalpos;
+				totalAddedVal.set(i, newPos);
+			}
+		}
+	
+		AxisValues res = new AxisValues(totalAddedVal);
+		
+		return res;
 	}
-	private AxisValues addAxisValues(AxisValues a1,AxisValues a2) {
-		return null;
-	}
+
+	// a1 - a2 
 	private AxisValues subtractAxisValues(AxisValues a1,AxisValues a2) {
-		return null;
+		ArrayList<Double> resArr = new ArrayList<Double>(a1.getAntennaPos()); // store result in this, just subtract every element by a2
+		
+		int size = a1.getAntennaPos().size();
+		for(int i = 0;i<size;i++) {
+			double res = a1.getAntennaPos().get(i) - a2.getAntennaPos().get(i);
+			resArr.set(i, res);
+		}
+		AxisValues res = new AxisValues(resArr);
+		return res;
 	}
+	
 	private AxisValues multiplyAxisValue(double multiple,AxisValues a1) {
-		return null;
+		ArrayList<Double> a1ArrCopy = new ArrayList<Double>(a1.getAntennaPos()); 
+		for(int i = 0;i<a1ArrCopy.size();i++) {
+			double res = a1.getAntennaPos().get(0) * multiple;
+			a1ArrCopy.set(i, res);
+		}
+		AxisValues res = new AxisValues(a1ArrCopy);
+		return res;
 	}
 }
