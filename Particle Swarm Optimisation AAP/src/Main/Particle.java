@@ -6,18 +6,35 @@ import java.util.Random;
 public class Particle {
 
 	public static AxisValues gBest;
-    private static Random rand = new Random(95861);
+    private static Random rand;
+    private static double w;
+	private static double c1;
+	private static double c2;
 	private AxisValues position;
 	private AxisValues velocity;
 	private AxisValues pBest;
 	private AntennaArray antennaArray;
 	
-	public Particle(AxisValues position,AxisValues velocity,AntennaArray antennaArray) {
-		this.position = this.position;
-		this.velocity = multiplyAxisValue(0.5, velocity);
-		this.antennaArray = antennaArray;
+	public static void initalizeParticleClass(long seed,double w,double c1,double c2) {
+		Particle.rand = new Random(seed);
+		Particle.w = w;
+		Particle.c1 = c1;
+		Particle.c2 = c2;
 	}
 	
+	public Particle(AxisValues position,AxisValues velocity,AntennaArray antennaArray) {
+		this.position = position;
+		this.velocity = multiplyAxisValue(0.5, velocity);
+		this.antennaArray = antennaArray;
+		pBest = position;
+		if(gBest == null) {
+			gBest = position;
+		}
+	}
+	
+	public AxisValues getPos() {
+		return position;
+	}
 	
 	public void update() {
 		checkCurrentPosition();
@@ -28,18 +45,32 @@ public class Particle {
 	
 	
 	private void checkCurrentPosition() {
-		double gBestCost = antennaArray.evaluate(gBest.getRaw());
-		double pBestCost = antennaArray.evaluate(pBest.getRaw());
-		double currentposCost = antennaArray.evaluate(position.getRaw());
+		// invisible wall contraint handling 
 		
-		// do checking here
+		boolean valid = antennaArray.is_valid(position.getRaw());
+		if(valid == true) {
+			
+			double gBestCost = antennaArray.evaluate(gBest.getRaw());
+			double pBestCost = antennaArray.evaluate(pBest.getRaw());
+			double currentposCost = antennaArray.evaluate(position.getRaw());
+			
+			// do checking here
+			
+			if(currentposCost<gBestCost) {
+				gBest = position;
+				pBest = position;
+			}
+			else if(currentposCost<pBestCost) {
+				pBest = position;
+			}
+		}
 	}
 	
 	private void calculateNewVelocity() {
 		// Variables that gage 0 <- exploitation / exploration -> 1;
-		double w =1;	//position - inertia
-		double c1 =1; 	//pbest - cognitive
-		double c2 = 1;	//gbest - social
+//		double w =1;	//position - inertia
+//		double c1 =1; 	//pbest - cognitive
+//		double c2 = 1;	//gbest - social
 		
 		// stocastic variables for particle to favour pbest or gbest in a single move
 		double r1  = 0 + rand.nextDouble() * (1 - 0);
@@ -53,7 +84,8 @@ public class Particle {
 		AxisValues distanceToGBest = subtractAxisValues(gBest,position);
 		AxisValues socialComp = multiplyAxisValue((c2*r2), distanceToGBest);
 		AxisValues [] allComp = new AxisValues[] {inertia,cognitiveComp,socialComp}; 
-		
+		//System.out.println("x1");
+
 		AxisValues newVelocity = addAxisValues(allComp);
 		this.velocity = newVelocity;
 		
@@ -61,7 +93,6 @@ public class Particle {
 	private void moveToNewPosition() {
 		AxisValues newPosition = addAxisValues(new AxisValues[] {position,velocity});
 		position = newPosition;
-		
 	}
 	
 	private AxisValues addAxisValues(AxisValues[] values) {
@@ -70,9 +101,10 @@ public class Particle {
 		
 		ArrayList<Double> totalAddedVal = new ArrayList<Double>();
 		for(int i = 0;i<dim;i++) {
-			totalAddedVal.set(i, (double) 0);
+			totalAddedVal.add((double) 0);
 		}
 		
+		double lastVal = values[0].getAntennaPos().get(dim-1);
 		
 		for(AxisValues value:values) {
 			ArrayList<Double> antennaPos = value.getAntennaPos();
@@ -84,6 +116,7 @@ public class Particle {
 			}
 		}
 	
+		totalAddedVal.set((dim-1), lastVal);
 		AxisValues res = new AxisValues(totalAddedVal);
 		
 		return res;
@@ -94,7 +127,7 @@ public class Particle {
 		ArrayList<Double> resArr = new ArrayList<Double>(a1.getAntennaPos()); // store result in this, just subtract every element by a2
 		
 		int size = a1.getAntennaPos().size();
-		for(int i = 0;i<size;i++) {
+		for(int i = 0;i<size-1;i++) {
 			double res = a1.getAntennaPos().get(i) - a2.getAntennaPos().get(i);
 			resArr.set(i, res);
 		}
@@ -104,7 +137,7 @@ public class Particle {
 	
 	private AxisValues multiplyAxisValue(double multiple,AxisValues a1) {
 		ArrayList<Double> a1ArrCopy = new ArrayList<Double>(a1.getAntennaPos()); 
-		for(int i = 0;i<a1ArrCopy.size();i++) {
+		for(int i = 0;i<a1ArrCopy.size()-1;i++) {
 			double res = a1.getAntennaPos().get(0) * multiple;
 			a1ArrCopy.set(i, res);
 		}

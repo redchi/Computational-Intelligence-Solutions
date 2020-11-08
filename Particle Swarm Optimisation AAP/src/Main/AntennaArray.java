@@ -19,6 +19,10 @@ public class AntennaArray {
         n_antennae = n_ant;
         steering_angle = steering_ang;
     }
+    
+    public int getNumOfAntenna() {
+    	return n_antennae;
+    }
   /**
    * Rectangular bounds on the search space.
    * @return Vector b such that b[i][0] is the minimum permissible value of the
