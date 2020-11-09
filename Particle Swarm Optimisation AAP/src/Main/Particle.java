@@ -76,6 +76,7 @@ public class Particle {
 		double r1  = 0 + rand.nextDouble() * (1 - 0);
 		double r2 = 1-r1;
 		
+	
 		AxisValues inertia = multiplyAxisValue(w,velocity);
 		
 		AxisValues distanceToPBest = subtractAxisValues(pBest,position);
@@ -138,7 +139,7 @@ public class Particle {
 	private AxisValues multiplyAxisValue(double multiple,AxisValues a1) {
 		ArrayList<Double> a1ArrCopy = new ArrayList<Double>(a1.getAntennaPos()); 
 		for(int i = 0;i<a1ArrCopy.size()-1;i++) {
-			double res = a1.getAntennaPos().get(0) * multiple;
+			double res = a1.getAntennaPos().get(i) * multiple;
 			a1ArrCopy.set(i, res);
 		}
 		AxisValues res = new AxisValues(a1ArrCopy);
