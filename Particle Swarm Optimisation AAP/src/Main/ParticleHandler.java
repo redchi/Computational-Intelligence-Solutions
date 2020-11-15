@@ -16,7 +16,7 @@ public class ParticleHandler {
 	
 	public AxisValues runParticleSwarmOptimization(int numOfParticles) {	
 		ArrayList<Particle> particles = new ArrayList<Particle>();
-		Particle.initalizeParticleClass(34243, 1, 1, 1);
+		Particle.initalizeParticleClass(34243, 0.5, 1, 1);
 		for(int i = 0;i<numOfParticles;i++) {
 			ArrayList<AxisValues> posAndVelocity = generateRandomPosition(2);
 			AxisValues particlePos = posAndVelocity.get(0);

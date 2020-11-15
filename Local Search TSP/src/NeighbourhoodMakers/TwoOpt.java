@@ -8,10 +8,32 @@ import java.util.stream.Stream;
 
 import Main.*;
 
+/**
+ * 2OPT Neighbourhood function
+ */
 public class TwoOpt {
 
+	/**
+	 * Generates all routes that can be made by swapping all cityLinks with another CityLink from The original route.
+	 * A city link has start city and end city, shows direction. eg route 1-3-2-1 has 3 city links, 1-3,3-2,2-1
+	 * but in this method its more abstract, all original routes are always like 0-1-2-0, so we have 3 cityLinks 
+	 * cityLinks[i] = i,i+1, eg cityLinks[0] = 0,0+1 = 0-1, we dont care about exact order of route as its not necessary,
+	 * as we know that path[0] = 1 and path[1] = 3,so 0-1 is the same as 1-3
+	 * 
+	 * Works by selecting inorder from 0 to n the first cityLink(CLink) from list of allCLinks
+	 * then it removes that Link and all adjacent Clinks so 1 above and 1 below it from allCLinks this is now a list of swappableCLinks
+	 * then inorder from 0 to n selects the second Clink from swappableCLinks
+	 * It then verifys the order to make sure first Clink is in fromt of second Clink, if not swap them
+	 * then it swiches the CLinks by linking Clink 1 Start city to Clink2 start city and CLink 1 endCity to Clink 2 end city,
+	 * any cities in between them will have there order reversed then a new route is created from this order
+	 * 
+	 * 
+	 * @param mainRoute the main route
+	 * @return the array list
+	 */
 	public ArrayList<Route> generateNeighbours(Route mainRoute){
 		ArrayList<Route> neighbours = new ArrayList<Route>();
+		neighbours.add(mainRoute);
 		ArrayList<Location> mainPath = mainRoute.getPath();
 		int mainRouteSize = mainPath.size()-2;
 		ArrayList<Integer> routeIndexs = numCounter(0,mainRouteSize);
@@ -52,6 +74,14 @@ public class TwoOpt {
 
 	}
 
+	/**
+	 * custom util method for counting
+	 * eg 0,4 return array list of int from 0 to 4,
+	 * also works with 4,0
+	 * @param start the start number
+	 * @param end the end number
+	 * @return the array list
+	 */
 	public ArrayList<Integer> numCounter(int start,int end){
 		ArrayList<Integer> count = new ArrayList<Integer>();
 		count.add(start);

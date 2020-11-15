@@ -6,13 +6,25 @@ import java.util.Comparator;
 
 import Main.Route;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class EGSurvivorSelector.
+
+ */
 public class EGSurvivorSelector {
 
-	public EGSurvivorSelector(){
-		
-	}
-	
-	// saves best route to children, even if it wa a parent, then kills all parents
+	/**
+	 * 
+	 * Select surviors from total population.
+	 * 
+	 * Saves 1 best route to children, even if it is a parent(Elitist), 
+	 * then kills all parents, then sorts and selects top children survivors(Genarational)
+	 *
+	 * @param parents the parents
+	 * @param children the children
+	 * @param populationSize the population size
+	 * @return the array list
+	 */
 	public ArrayList<Route> selectSurvivors(ArrayList<Route> parents,ArrayList<Route> children,int populationSize){
 		ArrayList<Route> allPop = new ArrayList<Route>();
 		allPop.addAll(parents);
@@ -32,13 +44,11 @@ public class EGSurvivorSelector {
 		children.add(bestRoute);
 		
 		ArrayList<Route> newPopulation = new ArrayList<Route>();
-		 Collections.sort(children, new SortbyCost());
+		Collections.sort(children, new SortbyCost());
 		 
 		 for(int i = 0;i<populationSize;i++) {
 			 newPopulation.add(children.get(i));
-			// System.out.println("survivor dist= "+children.get(i).getCostOfRoute());
 		 }
-		//System.out.println("\n");
 		return newPopulation;
 	}
 	
@@ -46,7 +56,8 @@ public class EGSurvivorSelector {
 	
 	class SortbyCost implements Comparator<Route> 
 	{ 
-	    // -1 if a<b acending order
+
+    	// -1 if a<b, ascending order
 	    public int compare(Route a, Route b) 
 	    { 
 	        if(a.getCostOfRoute()<b.getCostOfRoute()) {

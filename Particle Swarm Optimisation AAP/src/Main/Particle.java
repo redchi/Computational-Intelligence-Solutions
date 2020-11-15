@@ -7,9 +7,12 @@ public class Particle {
 
 	public static AxisValues gBest;
     private static Random rand;
+    
+    // Variables that gauge 0 <- exploitation / exploration -> 1;
     private static double w;
 	private static double c1;
 	private static double c2;
+	
 	private AxisValues position;
 	private AxisValues velocity;
 	private AxisValues pBest;
@@ -67,10 +70,6 @@ public class Particle {
 	}
 	
 	private void calculateNewVelocity() {
-		// Variables that gage 0 <- exploitation / exploration -> 1;
-//		double w =1;	//position - inertia
-//		double c1 =1; 	//pbest - cognitive
-//		double c2 = 1;	//gbest - social
 		
 		// stocastic variables for particle to favour pbest or gbest in a single move
 		double r1  = 0 + rand.nextDouble() * (1 - 0);
