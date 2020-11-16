@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
-import org.knowm.xchart.BitmapEncoder;
-import org.knowm.xchart.XYChart;
-import org.knowm.xchart.BitmapEncoder.BitmapFormat;
 
 import Evolver.Evolver;
 import PopulationMakers.RandomPopulationMaker;
@@ -24,7 +21,6 @@ public class Main {
 	public void start() {
 		Map map = new Map();
 		
-	//	map.generateCitiesRandomly(1000,0, 5000, 5000, 1234);
 		map.generateCitiesFromCSV(0);
 		RandomPopulationMaker populationMaker = new RandomPopulationMaker();
 		
@@ -37,10 +33,9 @@ public class Main {
 		Evolver evolver = new Evolver();
 		
 		int repeatAmt = 1000;
-		System.out.println("START COST = " + solutionCost );
+		System.out.println("start route cost = " + solutionCost );
 
 		for(int i =0;i<repeatAmt;i++) {		
-			//System.out.println("Cycle "+i);
 			population = evolver.evolvePopulation(population,populationSize);
 			Route currentBestRoute = bestRoute(population);
 			double cBestRouteCost = currentBestRoute.getCostOfRoute();
@@ -49,13 +44,19 @@ public class Main {
 				currentSolution = currentBestRoute;
 				solutionCost = cBestRouteCost;
 			}
+			System.out.println("\nGenaration "+i);
+			System.out.println("Best route found so far Cost = " + solutionCost );
 		}
-		System.out.println("DONE COST = " + solutionCost );
-
+		
+		System.out.println("\nBest Route Found\n" + currentSolution );
+		System.out.println("route Cost = " + solutionCost );
 	}
 	
 	
 
+	/*
+	 * calculates best route from list of routes
+	 */
 	private Route bestRoute(ArrayList<Route> population) {
 		Route bestRoute = population.get(0);
 		double bestRoutecost = bestRoute.getCostOfRoute();

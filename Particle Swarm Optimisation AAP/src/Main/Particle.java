@@ -9,15 +9,22 @@ public class Particle {
     private static Random rand;
     
     // Variables that gauge 0 <- exploitation / exploration -> 1;
-    private static double w;
-	private static double c1;
-	private static double c2;
+    // defined for all particles at ini stage
+    private static double w; // how much particle will remember prev velocity
+	private static double c1; //how much particle favours pBest
+	private static double c2;//how much particle favours gBest
 	
 	private AxisValues position;
 	private AxisValues velocity;
 	private AxisValues pBest;
+	
+	// reference to antenna array used for checking if particle position is valid
 	private AntennaArray antennaArray;
 	
+	/*
+	 * intisialisation of particle class
+	 * sets seed and particles exploitation / exploration values
+	 */
 	public static void initalizeParticleClass(long seed,double w,double c1,double c2) {
 		Particle.rand = new Random(seed);
 		Particle.w = w;
@@ -49,15 +56,14 @@ public class Particle {
 	
 	private void checkCurrentPosition() {
 		// invisible wall contraint handling 
-		
+		// only updates gbest and pbest if current position is valid, 
+		//insertia will slow down and particle will move back to valid region
 		boolean valid = antennaArray.is_valid(position.getRaw());
 		if(valid == true) {
 			
 			double gBestCost = antennaArray.evaluate(gBest.getRaw());
 			double pBestCost = antennaArray.evaluate(pBest.getRaw());
 			double currentposCost = antennaArray.evaluate(position.getRaw());
-			
-			// do checking here
 			
 			if(currentposCost<gBestCost) {
 				gBest = position;
@@ -72,8 +78,8 @@ public class Particle {
 	private void calculateNewVelocity() {
 		
 		// stocastic variables for particle to favour pbest or gbest in a single move
-		double r1  = 0 + rand.nextDouble() * (1 - 0);
-		double r2 = 1-r1;
+		double r1  = 0 + rand.nextDouble() * (1 - 0); // favors pbest
+		double r2 = 1-r1; // favors gbest
 		
 	
 		AxisValues inertia = multiplyAxisValue(w,velocity);
@@ -84,17 +90,24 @@ public class Particle {
 		AxisValues distanceToGBest = subtractAxisValues(gBest,position);
 		AxisValues socialComp = multiplyAxisValue((c2*r2), distanceToGBest);
 		AxisValues [] allComp = new AxisValues[] {inertia,cognitiveComp,socialComp}; 
-		//System.out.println("x1");
-
+		
 		AxisValues newVelocity = addAxisValues(allComp);
 		this.velocity = newVelocity;
 		
 	}
+	
 	private void moveToNewPosition() {
 		AxisValues newPosition = addAxisValues(new AxisValues[] {position,velocity});
 		position = newPosition;
 	}
 	
+	/*
+	 * Axis Util methods used by particle class
+	 */
+	
+	/*
+	 * adds a array of axis values together, exept last value as it is always fixed
+	 */
 	private AxisValues addAxisValues(AxisValues[] values) {
 
 		int dim = values[0].getAntennaPos().size();  // dimension
@@ -116,7 +129,7 @@ public class Particle {
 			}
 		}
 	
-		totalAddedVal.set((dim-1), lastVal);
+		totalAddedVal.set((dim-1), lastVal); // reset last value to original
 		AxisValues res = new AxisValues(totalAddedVal);
 		
 		return res;
@@ -134,7 +147,7 @@ public class Particle {
 		AxisValues res = new AxisValues(resArr);
 		return res;
 	}
-	
+	// m*a1
 	private AxisValues multiplyAxisValue(double multiple,AxisValues a1) {
 		ArrayList<Double> a1ArrCopy = new ArrayList<Double>(a1.getAntennaPos()); 
 		for(int i = 0;i<a1ArrCopy.size()-1;i++) {

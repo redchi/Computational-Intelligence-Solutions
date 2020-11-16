@@ -62,7 +62,10 @@ public class Main {
 		System.out.println("Route Cost = "+distanceOfRoute);
 		
 	}
-	
+	/*
+	 * find cost of a manualy made route from csv,
+	 * note enter location index NOT ID, starts from 0 and goes in order
+	 */
 	public void manualRouteGenFromCSVMap() {
 		Map map = new Map();
 		map.generateCitiesFromCSV(0);
@@ -71,6 +74,7 @@ public class Main {
 		Route route = new Route();
 		route.addCity(cities.get(0));
 		route.addCity(cities.get(1));
+		route.addCity(cities.get(0));
 		
 		System.out.println("Route Cost = "+route.getCostOfRoute());
 	}

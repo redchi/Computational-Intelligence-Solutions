@@ -8,7 +8,7 @@ import Main.Route;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class EGSurvivorSelector.
+ * Elitist and generational survivor selector
 
  */
 public class EGSurvivorSelector {

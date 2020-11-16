@@ -84,14 +84,14 @@ public class Order1Crossover {
 			p1CopiedParts.add(selectedP1Loc);
 		}
 		ArrayList<Location> p2CopiedParts = new ArrayList<Location>();
-		//p2.removeAll(p1CopiedParts);
+		
 		int p2StartIndex = startIndex + copyAmt - 1;
 		for(int i = 0;i<p2.size();i++) {
 			int index = (p2StartIndex + i)%(p1.size());
 			Location p2Loc = p2.get(index);
 			p2CopiedParts.add(p2Loc);
 		}
-		p2CopiedParts.removeAll(p1CopiedParts);
+		p2CopiedParts.removeAll(p1CopiedParts); // remove duped values
 		
 		
 		ArrayList<Location> childLocs = new ArrayList<Location>();

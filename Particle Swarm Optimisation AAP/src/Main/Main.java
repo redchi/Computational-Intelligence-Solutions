@@ -15,16 +15,10 @@ public class Main {
 	
 
 	public void start() {
-		//int antennaNum = 24;
-		AntennaArray antennaArray = new AntennaArray(10, 90);
-
+		AntennaArray antennaArray = new AntennaArray(10, 20);
 		
-		//double vals[] = new double[]  {0.25,0.8,1.5 };
-		//double cost = antennaArray.evaluate(vals);
-		//System.out.println(" c = "+ cost);
-	//	System.out.println(antennaArray.is_valid(vals));
 		ParticleHandler PH = new ParticleHandler(antennaArray);
-		AxisValues gBest =  PH.runParticleSwarmOptimization(40);
+		AxisValues gBest =  PH.runParticleSwarmOptimization(50,10);
 		
 		System.out.println("\nPSO TERMINATED\nGlobal Best");
 		

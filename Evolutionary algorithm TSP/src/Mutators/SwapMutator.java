@@ -54,9 +54,9 @@ public class SwapMutator {
 	
 	/**
 	 * Random swap city - mutation of child, same as 1 cycle of 2opt from local search 
-	 *
+	 * swaps 2 random city links
 	 * @param child the child
-	 * @return the route
+	 * @return the mutated child
 	 */
 	private Route randomSwapCity(Route child) {
 		ArrayList<Location> mainPath = child.getPath();
