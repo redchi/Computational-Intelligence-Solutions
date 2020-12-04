@@ -1,6 +1,11 @@
 package Main;
 
 public class Location {
+	
+	/**
+	 * location ID
+	 */
+	private final String ID;
 	  /**
      * The x cord
      */
@@ -17,9 +22,10 @@ public class Location {
      * @param x the x
      * @param y the y
      */
-    public Location(float x, float y) {
+    public Location(float x, float y,String ID) {
         this.x = x;
         this.y = y;
+        this.ID = ID;
     }
 
     /* (non-Javadoc)
@@ -66,6 +72,9 @@ public class Location {
         return x;
     }
 
+    public String getID() {
+    	return ID;
+    }
     /**
      * Sets the x.
      *
@@ -91,7 +100,8 @@ public class Location {
     public Location clone() {
         float xt = x;
         float yt = y;
-        return new Location(xt, yt);
+        String IDN = ID;
+        return new Location(xt, yt,IDN);
     }
 
     /* (non-Javadoc)

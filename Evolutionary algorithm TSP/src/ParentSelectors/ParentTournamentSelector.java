@@ -8,10 +8,20 @@ import java.util.Random;
 import Main.Location;
 import Main.Route;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ParentTournamentSelector.
+ */
 public class ParentTournamentSelector {
 
-	Random rand;
+	/** The random obj */
+	private Random rand;
 	
+	/**
+	 * Instantiates a new parent tournament selector.
+	 *
+	 * @param seed the seed
+	 */
 	public ParentTournamentSelector(long seed) {
 		rand = new Random(seed);
 	}
@@ -19,6 +29,15 @@ public class ParentTournamentSelector {
 	
 	
 	
+	/**
+	 * Select best parents.
+	 * runs a certain amount of tournaments from randomly selects parents,
+	 * picks the best parents.
+	 * 
+	 * @param population the total population
+	 * @param amount the amount of parents we want pack
+	 * @return the array list of selected parents
+	 */
 	public ArrayList<Route> selectParents(ArrayList<Route> population, int amount){
 		
 		int maxRange = population.size();
@@ -38,36 +57,21 @@ public class ParentTournamentSelector {
 			parents.add(winner);
 		}
 		
-//		int total = 0;
-//		ArrayList<Route> copy = new ArrayList<Route>(parents);
-//		for(int i = 0;i<parents.size();i++) {
-//			int count = 0;
-//			Route parent = parents.get(i);
-//			for(Route other:copy) {
-//				if(parent.equals(other) == true) {
-//					count = count +1 ;
-//				}
-//			}
-//			if(count>=1) {
-//				System.out.println("route won - "+count + " times dist = "+parent.getCostOfRoute());
-//			}
-//			
-//			total = total + count;
-//			copy.removeAll(Collections.singleton(parent));
-//		}
-//
-//		System.out.println(" end  total = "+total);
-//		System.out.println(" parent size = "+parents.size());
-//		
 		return parents;
 	}
 	
 	
+	/**
+	 * Run a single tournament.
+	 *find the best route and that is the winner
+	 * @param participants the participants
+	 * @return the route
+	 */
 	private Route runTournament(ArrayList<Route> participants) {
 		Route bestRoute = participants.get(0);
-		double bestRouteCost = getCostOfRoute(bestRoute);
+		double bestRouteCost = bestRoute.getCostOfRoute();
 		for (Route route:participants) {
-			double currentCost = getCostOfRoute(route);
+			double currentCost = route.getCostOfRoute();
 			if(currentCost<bestRouteCost) {
 				bestRoute = route;
 				bestRouteCost = currentCost;
@@ -76,21 +80,6 @@ public class ParentTournamentSelector {
 		return bestRoute;
 	}
 	
-	private double getCostOfRoute(Route route) {
-		double totalDistance = 0;
-		ArrayList<Location> path = route.getPath();
-		int pathSize = path.size();
-		Location currentCity = path.get(0);
-		for(int i = 1;i<pathSize;i++) {
-			Location nextCity = path.get(i);
-			double x = (nextCity.getX() - currentCity.getX());
-			double y = (nextCity.getY() - currentCity.getY());
-			double distance = Math.sqrt((x*x)+(y*y));
-			totalDistance = totalDistance + distance;
-			currentCity = path.get(i);
-		}
-		return totalDistance;
-	}
 	
 	
 }

@@ -4,51 +4,78 @@ import java.util.ArrayList;
 
 import RouteCalculator.RandomRouteGenerator;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Main.
+ */
 public class Main {
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
-		
-//		
-//        ArrayList<String> al = new ArrayList<String>();
-//
-//        //Adding elements to the ArrayList
-//        al.add("Apple");
-//        al.add("Orange");
-//        al.add("Mango");
-//        al.add("Grapes");
-//        System.out.println("ArrayList: "+al);
-//   
-//        ArrayList<String> al2 = new ArrayList<String>(al);
-//        System.out.println("Shallow copy of ArrayList: "+ al2);
-//   
-//        //add and remove on original ArrayList
-//        al2.add("Fig");
-//        //Display of both ArrayLists after add & remove
-//        System.out.println("Original ArrayList:"+al);
-//        System.out.println("Cloned ArrayList:"+al2);
-//        
-        
         Main main = new Main();
-        main.start();
+        main.generateRandomRouteFromCSVMap();
 	}
 
 	
-	public void start() {
+
+	/**
+	 * Generate a random {@link Route} from a list of cities on a CSV file
+	 */
+	public void generateRandomRouteFromCSVMap() {
+		// create map
 		Map map = new Map();
-		
-//		map.generateCities(5,0, 30, 30, 1234);
 		map.generateCitiesFromCSV(0);
 		
+		//create route
 		RandomRouteGenerator rrg = new RandomRouteGenerator(map);
 		Route solution = rrg.generateRoute();
+		
+		//print route
 		System.out.println(solution);
-		double distanceOfRoute = map.getCostOfRoute(solution);
-		System.out.println("\nTOTAL DISTANCE = "+distanceOfRoute+"\n");
+		double distanceOfRoute = solution.getCostOfRoute();
+		System.out.println("Route Cost = "+distanceOfRoute);
 		
 	
 
 	}
 	
+	/**
+	 * Generate random {@link Route} from random map.
+	 */
+	public void generateRandomRouteFromRandomMap() {
+		// create map
+		Map map = new Map();
+		map.generateCitiesRandomly(50, 0, 200, 200, 942359);;
+		
+		//create route
+		RandomRouteGenerator rrg = new RandomRouteGenerator(map);
+		Route solution = rrg.generateRoute();
+		
+		//print route
+		System.out.println(solution);
+		double distanceOfRoute = solution.getCostOfRoute();
+		System.out.println("Route Cost = "+distanceOfRoute);
+		
+	}
+	/*
+	 * find cost of a manualy made route from csv,
+	 * note enter location index NOT ID, starts from 0 and goes in order
+	 */
+	public void manualRouteGenFromCSVMap() {
+		Map map = new Map();
+		map.generateCitiesFromCSV(0);
+		ArrayList<Location> cities = map.getCities();
+		
+		Route route = new Route();
+		route.addCity(cities.get(0));
+		route.addCity(cities.get(1));
+		route.addCity(cities.get(0));
+		
+		System.out.println("Route Cost = "+route.getCostOfRoute());
+	}
 }

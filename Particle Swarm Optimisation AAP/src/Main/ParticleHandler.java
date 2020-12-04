@@ -3,20 +3,43 @@ package Main;
 import java.util.ArrayList;
 import java.util.Random;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ParticleHandler handles all particle genaration and mangagement in simulation
+ */
 public class ParticleHandler {
 
+	/** The antenna array. */
 	private AntennaArray antennaArray;
+	
+	/** The rand. */
 	private Random rand;
 	
+	/**
+	 * Instantiates a new particle handler.
+	 *
+	 * @param antennaArray the antenna array
+	 */
 	public ParticleHandler(AntennaArray antennaArray) {
 		this.antennaArray = antennaArray;
 		rand = new Random(213123);
 	}
 
 	
-	public AxisValues runParticleSwarmOptimization(int numOfParticles) {	
+	/**
+	 * Run particle swarm optimization algorithm
+	 *
+	 * @param numOfParticles the num of particles you want in here
+	 * @param cycles the max num of cycles - termination condition
+	 * @return the axis values of GBest 
+	 */
+	public AxisValues runParticleSwarmOptimization(int numOfParticles,int cycles) {	
 		ArrayList<Particle> particles = new ArrayList<Particle>();
-		Particle.initalizeParticleClass(34243, 1, 1, 1);
+		
+		// customise amount of particle exploration/exploitation here
+		Particle.initalizeParticleClass(34243, 0.5, 1, 1);
+		
+		// generate valid particles here
 		for(int i = 0;i<numOfParticles;i++) {
 			ArrayList<AxisValues> posAndVelocity = generateRandomPosition(2);
 			AxisValues particlePos = posAndVelocity.get(0);
@@ -25,26 +48,32 @@ public class ParticleHandler {
 			particles.add(particle);
 		}
 	
-		int cycles = 100;
+		// run simulation
 		for(int i = 0;i<cycles;i++) {
 			double cost = antennaArray.evaluate(Particle.gBest.getRaw());
-			System.out.println("\n"+i + " cost = "+cost);
+			System.out.println("\n iteration "+i + "    GBest cost = "+cost);
 			
 			for(Particle particle:particles) {
 				
 				particle.update();
 			}
 			
-//			for(double pos:Particle.gBest.getAntennaPos()) {
-//				System.out.print(pos + " ");
-//				
-//			}
-//			System.out.println();
 		}
 		return Particle.gBest;
 		
 	}
 	
+	/**
+	 * Generate number of  random and valid antenna positions in 1 region,
+	 * region set to lower values of 1st antenna/ lower antennas
+	 * so antenna position will go in ascending order
+	 * eg out of [1,0.5,1.5] and [0.5,1,1.5], the [0.5,1,1.5] will be picked,
+	 * this insures no particle will be generated in different regions
+	 * 
+	 *
+	 * @param numOfPos the amount of valid positions you want
+	 * @return the array list of axisValues of the positions
+	 */
 	private ArrayList<AxisValues> generateRandomPosition(int numOfPos) {
 	
 		ArrayList<AxisValues> positions = new ArrayList<AxisValues>();
@@ -59,7 +88,7 @@ public class ParticleHandler {
 			double maxBound = maxValue - ((antenaNum-1)*minAntennaDistance);
 			
 			double firstAntennaPos = minBound + rand.nextDouble() * (maxBound - minBound);
-			// do validation here
+			
 			values.add(firstAntennaPos);
 			double prevValue  = firstAntennaPos;
 			for(int j = 0;j<(antenaNum-2);j++) {
@@ -69,9 +98,7 @@ public class ParticleHandler {
 				prevValue= nextPos;
 				values.add(nextPos);
 			}
-			values.add(antenaNum/2);
-			double [] temp = values.stream().mapToDouble(x -> x).toArray();
-		//	System.out.println(antennaArray.is_valid(temp));
+			values.add(antenaNum/2); // last antenna pos added
 			
 			AxisValues res = new AxisValues(values);
 			positions.add(res);

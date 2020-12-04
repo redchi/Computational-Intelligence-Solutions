@@ -9,6 +9,10 @@ import ParentSelectors.ParentTournamentSelector;
 import Recombinators.Order1Crossover;
 import SurvivorSelectors.EGSurvivorSelector;
 
+// TODO: Auto-generated Javadoc
+/**
+ * Evolves a population
+ */
 public class Evolver {
 
 	private ParentTournamentSelector parentSelector;
@@ -16,6 +20,9 @@ public class Evolver {
 	private SwapMutator mutator;
 	private EGSurvivorSelector survivorSelector;
 	
+	/**
+	 * Instantiates a new evolver.
+	 */
 	public Evolver() {
 		parentSelector = new ParentTournamentSelector(1264841234);
 		recombinator = new Order1Crossover(234527);
@@ -23,28 +30,23 @@ public class Evolver {
 		survivorSelector = new EGSurvivorSelector();
 	}
 	
+	/**
+	 * Evolve population.
+	 * selects best parents, makes children from them, mutate the children, select best survivors 
+	 *
+	 * @param currentPopulation the current population
+	 * @param sizeLimit the size limit
+	 * @return the new generation of evolved population
+	 */
 	public ArrayList<Route> evolvePopulation(ArrayList<Route> currentPopulation,int sizeLimit) {
 		int selectionAmt = (currentPopulation.size()/2);
 		ArrayList<Route> parents = parentSelector.selectParents(currentPopulation,selectionAmt);
 		int childrenAmt = parents.size() * 2;
 		ArrayList<Route> children = recombinator.generateChildren(parents,childrenAmt);
-	//	ArrayList<Route> mutatedChildren = new A
 		for(int i = 0;i<children.size();i++) {
 			Route child = children.get(i);
 			child = mutator.mutate(child);
 			children.set(i,child);
-			//Route child = 
-		}
-		
-//		for(Route child: children) {
-//			
-//		//	System.out.println("New child dist = "+ child.getCostOfRoute());
-//		}
-		
-	
-		for(Route child: children) {
-			//child = mutator.mutate(child);
-	//		System.out.println(" child dist = "+ child.getCostOfRoute());
 		}
 		ArrayList<Route> survivors  =  survivorSelector.selectSurvivors(parents,children,sizeLimit);	
 		return survivors;

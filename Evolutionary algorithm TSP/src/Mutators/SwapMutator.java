@@ -7,25 +7,42 @@ import java.util.Random;
 import Main.Location;
 import Main.Route;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SwapMutator.
+ */
 public class SwapMutator {
 
-	Random rand;
-	int mutationRate;
+	/** The random obj */
+	private Random rand;
+	
+	/** The mutation rate. */
+	private int mutationRate;
 	
 	
+	/**
+	 * Instantiates a new swap mutator.
+	 *
+	 * @param seed the seed
+	 * @param mutationRate the mutation rate
+	 */
 	public SwapMutator(long seed,int mutationRate) {
 		rand = new Random(seed);
 		this.mutationRate = mutationRate;
 	}
 	
+	/**
+	 * Mutate a child, if rolled chance is within mutation rate,
+	 *	eg chance = 79 and rate = 100 then child will mutate,
+	 *	chance is randomly calculated.
+	 *
+	 * @param child the child
+	 * @return the mutated child
+	 */
 	public Route mutate(Route child) {
-		int chance = rand.nextInt(101);
-		
+		int chance = rand.nextInt(100);
 		if(chance<=mutationRate) {
-		//	System.out.println("mutated!");
-			//System.out.println("before = " + child.getCostOfRoute());
 			Route newChild = randomSwapCity(child);
-			//System.out.println("after = " + newChild.getCostOfRoute());
 			return newChild;
 		}
 		else {
@@ -35,6 +52,12 @@ public class SwapMutator {
 	
 	
 	
+	/**
+	 * Random swap city - mutation of child, same as 1 cycle of 2opt from local search 
+	 * swaps 2 random city links
+	 * @param child the child
+	 * @return the mutated child
+	 */
 	private Route randomSwapCity(Route child) {
 		ArrayList<Location> mainPath = child.getPath();
 		int mainRouteSize = mainPath.size()-2;
@@ -44,35 +67,46 @@ public class SwapMutator {
 		int cLinksTotal = routeIndexs.size() -2;
 		int cLink = rand.nextInt(cLinksTotal);
 		
-			int fwdCLink = (cLink+1)%(cLinksTotal+1);
-			int dwnCLink = (cLink-1)%(cLinksTotal+1);
-			ArrayList<Integer> swappableCLinks = numCounter(0,(cLinksTotal -1));
-			swappableCLinks.removeAll(Arrays.asList(cLink,fwdCLink,dwnCLink));
-			
-			int swappableClinkRandomIndex = rand.nextInt(swappableCLinks.size());
-			int otherCLink = swappableCLinks.get(swappableClinkRandomIndex);
-				int FCL = cLink;
-				int SCL = otherCLink;
-				if(cLink>otherCLink) {
-					 FCL = otherCLink;
-					 SCL = cLink;
-				}
-				ArrayList<Integer> newRouteIndexes = numCounter(0,FCL);
-				newRouteIndexes.addAll(numCounter(SCL,(FCL+1)));			
-				if(SCL<cLinksTotal) {
-					newRouteIndexes.addAll(numCounter((SCL+1),cLinksTotal));
-				}
-				newRouteIndexes.add(0);
-				
-				Route newChild = new Route();
-				for(int num:newRouteIndexes ) {	
-					Location city = mainPath.get(num).clone();
-					newChild.addCity(city);				
-				}	
+		int fwdCLink = (cLink+1)%(cLinksTotal+1);
+		int dwnCLink = (cLink-1)%(cLinksTotal+1);
+		ArrayList<Integer> swappableCLinks = numCounter(0,(cLinksTotal -1));
+		swappableCLinks.removeAll(Arrays.asList(cLink,fwdCLink,dwnCLink));
+		
+		int swappableClinkRandomIndex = rand.nextInt(swappableCLinks.size());
+		int otherCLink = swappableCLinks.get(swappableClinkRandomIndex);
+		int FCL = cLink;
+		int SCL = otherCLink;
+		
+		if(cLink>otherCLink) {
+			 FCL = otherCLink;
+			 SCL = cLink;
+		}
+		
+		ArrayList<Integer> newRouteIndexes = numCounter(0,FCL);
+		newRouteIndexes.addAll(numCounter(SCL,(FCL+1)));	
+		
+		if(SCL<cLinksTotal) {
+			newRouteIndexes.addAll(numCounter((SCL+1),cLinksTotal));
+		}
+		newRouteIndexes.add(0);
+		Route newChild = new Route();
+		
+		for(int num:newRouteIndexes ) {	
+			Location city = mainPath.get(num).clone();
+			newChild.addCity(city);				
+		}	
+		
 		return newChild;
 	}
 	
 	
+	/**
+	 * Num counter.
+	 *
+	 * @param start the start
+	 * @param end the end
+	 * @return the array list
+	 */
 	public ArrayList<Integer> numCounter(int start,int end){
 		ArrayList<Integer> count = new ArrayList<Integer>();
 		count.add(start);
