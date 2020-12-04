@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="Evolutionary algorithm TSP/src"/>
+	<classpathentry kind="src" path="Local Search TSP/src"/>
+	<classpathentry kind="src" path="Particle Swarm Optimisation AAP/src"/>
+	<classpathentry kind="src" path="Traveling salesman problem/src"/>
+	<classpathentry kind="output" path="Evolutionary algorithm TSP/bin"/>
+</classpath>
