@@ -8,9 +8,9 @@ public class Main {
 	}
 	
 	public void start() {
-		ProblemSpecification ss = new ProblemSpecification("yeet");
-		ss.generateSpec("./problems/prob1.txt");
-
-
+		ProblemSpecification probSpec = new ProblemSpecification("./problems/prob1.txt");
+		Initialiser ini = new Initialiser(probSpec);
+		Solution sol = ini.gen1Sol();
+		System.out.println("done");
 	}
 }

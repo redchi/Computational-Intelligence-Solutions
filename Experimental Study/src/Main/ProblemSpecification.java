@@ -10,13 +10,14 @@ public class ProblemSpecification {
 	private ArrayList<Float> standardCuttingLengths;
 	private HashMap<Float,Float> stockLengths2cost;
 	private ArrayList<Order> allOrders;
+	private String filePath;
 	
-	
-	public ProblemSpecification(String path) {
-		
+	public ProblemSpecification(String filePath) {
+		this.filePath = filePath;
+		generateSpec();
 	}
 	
-	public void generateSpec (String filePath) {
+	private void generateSpec() {
 	     BufferedReader br = null;
 	     standardCuttingLengths = null;
 	     stockLengths2cost = null;
@@ -119,13 +120,13 @@ public class ProblemSpecification {
 		return standardCuttingLengths;
 	}
 
-	public HashMap<Float, Float> getStockLengths2cost() {
-		return stockLengths2cost;
-	}
-
 	public ArrayList<Order> getAllOrders() {
 		return allOrders;
 	} 
+	
+	public float getCostofCuttingStock(float length) {
+		return stockLengths2cost.get(length);
+	}
 	
 	
 }
