@@ -1,5 +1,7 @@
 package Main;
 
+import java.util.ArrayList;
+
 public class Main {
 	
 	public static void main(String[] args) {
@@ -9,8 +11,8 @@ public class Main {
 	
 	public void start() {
 		ProblemSpecification probSpec = new ProblemSpecification("./problems/prob1.txt");
-		Initialiser ini = new Initialiser(probSpec);
-		Solution sol = ini.gen1Sol();
+		Initialiser ini = new Initialiser(probSpec,12314);
+		ArrayList<Solution> sols = ini.generatePopulation(10);
 		System.out.println("done");
 	}
 }
