@@ -36,6 +36,11 @@ public class Order {
     	// TODO Auto-generated method stub
     	return ID;
     }
+    
+    public Order clone() {
+    	Order res = new Order(this.ID, this.length);
+    	return res;
+    }
 
 	
 }

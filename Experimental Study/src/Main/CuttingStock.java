@@ -51,6 +51,23 @@ public class CuttingStock {
 		res = res + " ";
 		return res;
 	}
+	
+	
+	public CuttingStock clone() {
+		CuttingStock res = new CuttingStock(this.length, this.cost);
+		for(Order order:ordersCutByStock) {
+			res.addOrder(order.clone());
+		}
+		return res;
+	}
+	
+	public boolean orderExistsInsideStock(Order order) {
+		return ordersCutByStock.contains(order);
+	}
+	
+	public void removeOrder(Order order) {
+		ordersCutByStock.remove(order);
+	}
 }
 
 
