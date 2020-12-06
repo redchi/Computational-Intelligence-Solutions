@@ -10,31 +10,54 @@ public class SwapMutator {
 	private Random rand;
 	private ProblemSpecification probSpec;
 	private int mutationChance;
-	
+	 int c = 0;
+	static int h = 0;
 	public SwapMutator(long seed,int mutatationChance,ProblemSpecification probSpec ) {
 		this.probSpec = probSpec;
 		this.mutationChance = mutatationChance;
-		this.probSpec = probSpec;
+		rand = new Random(seed);
 	}
-	
 	
 	public ArrayList<Solution> mutateChildren(ArrayList<Solution> children){
 		ArrayList<Solution> mutatedChildren = new ArrayList<Solution>(); 
+	//	int c1 = c;
 		for(Solution child:children) {
 			int roll = rand.nextInt(101);
+			c = c + 1;
 			if(roll<=mutationChance) {
 				//mutate
+				if(valid(child) == false) {
+					System.out.println("#1 " + c );
+					h = h + 1;
+				}
 				Solution m1 = swapMutateCuttingStock(child);
+				if(valid(m1) == false) {
+					System.out.println("#2");
+					 
+				}
 				Solution m2 = swapMutateOrder(m1);
+				if(valid(m2) == false) {
+					System.out.println("#3");
+				}
 				mutatedChildren.add(m2);
 			}
 			else {
 				mutatedChildren.add(child);
 			}
+			
 		}
 		return mutatedChildren;
 	}
 	
+	
+	private boolean valid(Solution sol) {
+		for(CuttingStock stock:sol.getAllStockUsed()) {
+			if(stock.getUsedLength()>stock.getLength()) {
+				return false;
+			}
+		}
+		return true;
+	}
 	public Solution swapMutateOrder(Solution original) {
 		
 		ArrayList<Order> allOrders = new ArrayList<Order>();
@@ -44,8 +67,8 @@ public class SwapMutator {
 		int index = rand.nextInt(allOrders.size());
 		Order swapOrder1 = allOrders.get(index);
 		//finds cutting stock of selected swap order
-		//CuttingStock SO1CutStock = original.findOrderCuttingStock(swapOrder1);
-		ArrayList<Order> possibleSwaps = findPossibleSwaps(swapOrder1, null);
+		CuttingStock SO1CutStockTemp = original.findOrderCuttingStock(swapOrder1);
+		ArrayList<Order> possibleSwaps = findPossibleSwaps(swapOrder1,SO1CutStockTemp, original.getAllStockUsed());
 		
 		if(possibleSwaps.size() == 0) {
 			return original;
@@ -63,20 +86,18 @@ public class SwapMutator {
 		int so1Index = SO1CutStock.getOrdersCutByStock().indexOf(swapOrder1);
 		SO1CutStock.getOrdersCutByStock().set(so1Index, tempOrder);// dont really need this :/
 		
-		
 		CuttingStock SO2CutStock = newSol.findOrderCuttingStock(swapOrder2);
 		int so2Index = SO2CutStock.getOrdersCutByStock().indexOf(swapOrder2);
 		SO2CutStock.getOrdersCutByStock().set(so2Index, swapOrder1);
 		
-		
 		SO1CutStock.getOrdersCutByStock().set(so1Index, swapOrder2);
-		
 		return newSol;
 		
 	}
 	
-	private ArrayList<Order> findPossibleSwaps(Order swapOrder, ArrayList<CuttingStock> allStock){
+	private ArrayList<Order> findPossibleSwaps(Order swapOrder,CuttingStock swapOStock, ArrayList<CuttingStock> allStock){
 		ArrayList<Order> possibleSwaps = new ArrayList<Order>();
+
 		for(CuttingStock stock:allStock) {
 			for(Order order:stock.getOrdersCutByStock() ) {
 				float orderLen = order.getLength();
@@ -84,10 +105,16 @@ public class SwapMutator {
 				float stockUsedLength = stock.getUsedLength();
 				float stockLength = stock.getLength();
 				float newUsedLength = stockUsedLength - orderLen + swapOrderLen;
-				if(newUsedLength<=stockLength) {
+				
+				float swapOriginNewLength =  swapOStock.getUsedLength() - swapOrderLen + orderLen;
+				float originStockLength = swapOStock.getLength();
+				
+				if(newUsedLength<=stockLength && swapOriginNewLength<=originStockLength) {
 					//swappable !
 					possibleSwaps.add(order);
 				}
+				
+				
 			}
 		}
 		possibleSwaps.remove(swapOrder);
@@ -134,13 +161,6 @@ public class SwapMutator {
 		return possibleSwaps;
 	}
 }
-
-
-
-
-
-
-
 
 
 

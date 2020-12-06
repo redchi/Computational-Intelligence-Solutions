@@ -40,7 +40,8 @@ public class Order1Crossover {
 		// select random half of p1 to be used as 1st part of child
 		ArrayList<CuttingStock> p1ChildParts = new ArrayList<CuttingStock>();
 		for(int i = 0;i<amtSelected;i++) {
-			CuttingStock stock = p1Stock.get(p1Index + i);
+			int SIndex = (p1Index+i)%p1Stock.size();
+			CuttingStock stock = p1Stock.get(SIndex);
 			p1ChildParts.add(stock.clone());
 		}
 		// copy parent 2 cuttingstock and deep clone it
@@ -54,6 +55,7 @@ public class Order1Crossover {
 		}
 		
 		// remove all parent 1 orders part of child from all of parent 2  
+		// can be alot more effeciat !!!
 		for(Order order:allOrdersInP1) {
 			for(CuttingStock stock:p2Stock) {
 				if(stock.orderExistsInsideStock(order)==true) {
@@ -64,12 +66,14 @@ public class Order1Crossover {
 		}
 		
 		//clean up empty p2 cutting stock 
+		ArrayList<CuttingStock> removeList = new ArrayList<CuttingStock>();
 		for(int i = 0;i<p2Stock.size();i++) {
 			CuttingStock stock = p2Stock.get(i);
-			if(stock.getOrdersCutByStock().size() ==0) {
-				p2Stock.remove(stock);
+			if(stock.getUsedLength() ==0) {
+				removeList.add(stock);
 			}
 		}
+		p2Stock.removeAll(removeList);
 		
 		// now remaing p2 stock is 2nd part of child
 		ArrayList<CuttingStock> child = new ArrayList<CuttingStock>();

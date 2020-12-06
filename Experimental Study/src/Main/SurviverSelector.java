@@ -25,7 +25,7 @@ public class SurviverSelector {
 			survivors.add(sol);
 		}
 		
-		return children;
+		return survivors;
 	}
 	 
 	

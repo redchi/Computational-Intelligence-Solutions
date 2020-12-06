@@ -7,7 +7,7 @@ public class Main {
 	
 	public static void main(String[] args) {
 		Main main = new Main();
-		main.t1();
+		main.start();
 	}
 	
 	public void start() {
@@ -15,12 +15,16 @@ public class Main {
 		Initialiser ini = new Initialiser(probSpec,12314);
 		int populationSize = 100;
 		ArrayList<Solution> population = ini.generatePopulation(populationSize);
-		
-		int genarations = 1000;
+		System.out.println(population.size());
+		int genarations = 3000;
 		Evolver evolver = new Evolver(probSpec);
+		Solution bestSol = population.get(0);
 		for(int i = 0;i<genarations;i++) {
 			population = evolver.evolvePopulation(population);
+			bestSol = getBestSolution(population);
+			System.out.println(i +"  Best Solution Cost - "+bestSol.getTotalCost() + "   " + population.size());
 		}
+		printSolution(bestSol);
 	}
 	
 	
@@ -35,11 +39,35 @@ public class Main {
 		return bestSol;
 	}
 	
+	private void printSolution(Solution solution) {
+		int c = 0;
+		for(CuttingStock stock:solution.getAllStockUsed()) {
+			float length = stock.getLength();
+			float usedL = stock.getUsedLength();
+			
+			System.out.println("Stock num "+c +"  length = "+length + "    Used Length = "+usedL);
+			System.out.println("   Orders completed by stock");
+			for(Order order:stock.getOrdersCutByStock()) {
+				float l = order.getLength();
+				String id = order.getID();
+				System.out.println("   ID = "+id + "   length = "+l);
+			}
+			
+			
+			c = c + 1;
+		}
+	}
+	
 	
 	private void t0() {
 		ProblemSpecification probSpec = new ProblemSpecification("./problems/prob1.txt");
 		Initialiser ini = new Initialiser(probSpec,12314);
 		ArrayList<Solution> sols = ini.generatePopulation(10);
+		
+		for(Solution sol:sols) {
+			System.out.println("\n\n");
+			printSolution(sol);
+		}
 		System.out.println("done");
 	}
 	private void t1() {

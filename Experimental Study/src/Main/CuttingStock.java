@@ -52,7 +52,7 @@ public class CuttingStock {
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		String res = "Len = "+ length+"  Orders Cut = ";
+		String res = "Len = "+ length+"  Used Len = "+getUsedLength()+"  Orders Cut = ";
 		for(Order order:ordersCutByStock) {
 			res = res + order.getID() + ",";
 		}

@@ -22,7 +22,7 @@ public class Evolver {
 		int parentAmt = population.size()/2;
 		ArrayList<Solution> parents = parentSelector.selectBestParents(population, parentAmt);
 		
-		int childrenAmt = population.size();
+		int childrenAmt = population.size()*2;
 		ArrayList<Solution> children = recombinator.generateChildren(parents, childrenAmt);
 		ArrayList<Solution> mutatedChildren = mutator.mutateChildren(children);
 		
@@ -32,22 +32,6 @@ public class Evolver {
 		return survivors;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
