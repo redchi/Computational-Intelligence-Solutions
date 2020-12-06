@@ -13,11 +13,36 @@ public class Main {
 	public void start() {
 		ProblemSpecification probSpec = new ProblemSpecification("./problems/prob1.txt");
 		Initialiser ini = new Initialiser(probSpec,12314);
+		int populationSize = 100;
+		ArrayList<Solution> population = ini.generatePopulation(populationSize);
+		
+		int genarations = 1000;
+		Evolver evolver = new Evolver(probSpec);
+		for(int i = 0;i<genarations;i++) {
+			population = evolver.evolvePopulation(population);
+		}
+	}
+	
+	
+	private Solution getBestSolution(ArrayList<Solution> population) {
+		
+		Solution bestSol = population.get(0);
+		for(Solution sol:population) {
+			if(sol.getTotalCost()<bestSol.getTotalCost()) {
+				bestSol = sol;
+			}
+		}
+		return bestSol;
+	}
+	
+	
+	private void t0() {
+		ProblemSpecification probSpec = new ProblemSpecification("./problems/prob1.txt");
+		Initialiser ini = new Initialiser(probSpec,12314);
 		ArrayList<Solution> sols = ini.generatePopulation(10);
 		System.out.println("done");
 	}
-	
-	public void t1() {
+	private void t1() {
 		
 		ArrayList<Integer> x1 = new ArrayList<Integer>();
 		x1.add(3);
