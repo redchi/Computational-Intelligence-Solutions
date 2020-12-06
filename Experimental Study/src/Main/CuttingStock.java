@@ -31,6 +31,14 @@ public class CuttingStock {
 		
 	}
 	
+	public float getUsedLength() {
+		float totalUsed = 0;
+		for(Order order:ordersCutByStock) {
+			totalUsed = totalUsed + order.getLength();
+		}
+		return totalUsed;
+	}
+	
 	public boolean canCutOrder(Order orderNew) {
 		float totalUsed = 0;
 		for(Order order:ordersCutByStock) {
